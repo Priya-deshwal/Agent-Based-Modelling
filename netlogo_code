@@ -1,2 +1,218 @@
-<pre><font color="#007f69">globals</font><font color="#000000"> [<br />  num           </font><font color="#5a5a5a">; number of agents</font><font color="#000000"><br />  </font><font color="#5a5a5a">;;s             ; environment size in meters</font><font color="#000000"><br />  rad           </font><font color="#5a5a5a">; collision radius</font><font color="#000000"><br />  sight         </font><font color="#5a5a5a">; neighbor search range</font><font color="#000000"><br />  maxF          </font><font color="#5a5a5a">; maximum force/acceleration</font><font color="#000000"><br />  circles       </font><font color="#5a5a5a">; list of agent turtles</font><font color="#000000"><br />  v             </font><font color="#5a5a5a">; list of agent velocities</font><font color="#000000"><br />  gv            </font><font color="#5a5a5a">; list of agent goal velocities</font><font color="#000000"><br />  nbr           </font><font color="#5a5a5a">; list of agent neighbor lists</font><font color="#000000"><br />  nd            </font><font color="#5a5a5a">; list of agent neighbor distance lists</font><font color="#000000"><br /> </font><font color="#5a5a5a">;  listvelocity;</font><font color="#000000"><br />  yo</font><font color="#5a5a5a">;</font><font color="#000000"><br />  zo</font><font color="#5a5a5a">;</font><font color="#000000"><br />  listgv</font><font color="#5a5a5a">;</font><font color="#000000"><br />  he</font><font color="#5a5a5a">;</font><font color="#000000"><br />  te</font><font color="#5a5a5a">;</font><font color="#000000"><br />  r<br />  rx<br />  ry<br />]<br /><br /></font><font color="#007f69">to</font><font color="#000000"> setup<br />  </font><font color="#0000aa">clear-all</font><font color="#000000"><br />  </font><font color="#0000aa">reset-ticks</font><font color="#000000"><br />  </font><font color="#0000aa">set</font><font color="#000000"> num </font><font color="#963700">18</font><font color="#000000"><br />  </font><font color="#0000aa">set</font><font color="#000000"> rad </font><font color="#963700">0.2</font><font color="#000000"><br />  </font><font color="#0000aa">set</font><font color="#000000"> sight </font><font color="#963700">7</font><font color="#000000"><br />  </font><font color="#0000aa">set</font><font color="#000000"> maxF </font><font color="#963700">999</font><font color="#000000"><br />  </font><font color="#0000aa">set</font><font color="#000000"> r []<br />  </font><font color="#0000aa">set</font><font color="#000000"> v []<br />  </font><font color="#0000aa">set</font><font color="#000000"> gv []<br />  </font><font color="#0000aa">let</font><font color="#000000"> i </font><font color="#660096">max-pxcor</font><font color="#000000"> </font><font color="#660096">-</font><font color="#000000"> </font><font color="#963700">1</font><font color="#000000"><br />  </font><font color="#0000aa">let</font><font color="#000000"> j </font><font color="#660096">max-pycor</font><font color="#000000"> </font><font color="#660096">-</font><font color="#000000"> </font><font color="#963700">1</font><font color="#000000"><br />  </font><font color="#0000aa">create-turtles</font><font color="#000000"> num [<br />    </font><font color="#0000aa">set</font><font color="#000000"> </font><font color="#660096">color</font><font color="#000000"> </font><font color="#963700">white</font><font color="#000000"><br />    </font><font color="#0000aa">set</font><font color="#000000"> </font><font color="#660096">size</font><font color="#000000"> </font><font color="#963700">2</font><font color="#000000"><br />    </font><font color="#0000aa">set</font><font color="#000000"> </font><font color="#660096">shape</font><font color="#000000"> </font><font color="#963700">&quot;circle&quot;</font><font color="#000000"><br />    </font><font color="#0000aa">setxy</font><font color="#000000"> </font><font color="#660096">random-float</font><font color="#000000"> i </font><font color="#660096">random-float</font><font color="#000000"> j<br />    </font><font color="#0000aa">set</font><font color="#000000"> </font><font color="#660096">heading</font><font color="#000000"> </font><font color="#660096">random</font><font color="#000000"> </font><font color="#963700">360</font><font color="#000000"><br />   </font><font color="#5a5a5a">; set listvelocity[];</font><font color="#000000"><br />    </font><font color="#0000aa">set</font><font color="#000000"> rx [</font><font color="#660096">pxcor</font><font color="#000000">] </font><font color="#660096">of</font><font color="#000000"> </font><font color="#660096">self</font><font color="#000000"><br />    </font><font color="#0000aa">set</font><font color="#000000"> ry [</font><font color="#660096">pycor</font><font color="#000000">] </font><font color="#660096">of</font><font color="#000000"> </font><font color="#660096">self</font><font color="#000000"><br />    </font><font color="#0000aa">set</font><font color="#000000"> yo </font><font color="#963700">1.5</font><font color="#000000"> </font><font color="#660096">*</font><font color="#000000"> (</font><font color="#660096">item</font><font color="#000000"> (</font><font color="#963700">0</font><font color="#000000">) (heading-to-vector </font><font color="#660096">heading</font><font color="#000000">))<br />    </font><font color="#0000aa">set</font><font color="#000000"> zo </font><font color="#963700">1.5</font><font color="#000000"> </font><font color="#660096">*</font><font color="#000000"> (</font><font color="#660096">item</font><font color="#000000"> (</font><font color="#963700">1</font><font color="#000000">) (heading-to-vector </font><font color="#660096">heading</font><font color="#000000">))<br />    </font><font color="#0000aa">let</font><font color="#000000"> vo (</font><font color="#660096">list</font><font color="#000000"> yo zo)<br />    </font><font color="#0000aa">set</font><font color="#000000"> he </font><font color="#963700">2</font><font color="#000000"> </font><font color="#660096">*</font><font color="#000000"> (</font><font color="#660096">item</font><font color="#000000"> (</font><font color="#963700">0</font><font color="#000000">) (heading-to-vector </font><font color="#660096">heading</font><font color="#000000">))<br />    </font><font color="#0000aa">set</font><font color="#000000"> te </font><font color="#963700">2</font><font color="#000000"> </font><font color="#660096">*</font><font color="#000000"> (</font><font color="#660096">item</font><font color="#000000"> (</font><font color="#963700">1</font><font color="#000000">) (heading-to-vector </font><font color="#660096">heading</font><font color="#000000">))<br />    </font><font color="#0000aa">let</font><font color="#000000"> gvo (</font><font color="#660096">list</font><font color="#000000"> he te)<br />    </font><font color="#0000aa">let</font><font color="#000000"> ro (</font><font color="#660096">list</font><font color="#000000"> rx ry)<br />    </font><font color="#0000aa">print</font><font color="#000000"> ro<br />    </font><font color="#0000aa">print</font><font color="#000000"> vo<br />    </font><font color="#0000aa">print</font><font color="#000000"> gvo<br />    </font><font color="#0000aa">ifelse</font><font color="#000000"> (</font><font color="#660096">who</font><font color="#000000"> </font><font color="#660096">=</font><font color="#000000"> </font><font color="#963700">0</font><font color="#000000">) [ </font><font color="#0000aa">set</font><font color="#000000"> </font><font color="#660096">color</font><font color="#000000"> </font><font color="#963700">red</font><font color="#000000"> ] [ </font><font color="#0000aa">set</font><font color="#000000"> </font><font color="#660096">color</font><font color="#000000"> </font><font color="#963700">white</font><font color="#000000"> ]<br />    </font><font color="#0000aa">let</font><font color="#000000"> r1 </font><font color="#660096">lput</font><font color="#000000"> ro r<br />    </font><font color="#0000aa">let</font><font color="#000000"> v1 </font><font color="#660096">lput</font><font color="#000000"> vo v<br />    </font><font color="#0000aa">let</font><font color="#000000"> gv1 </font><font color="#660096">lput</font><font color="#000000"> gvo gv<br />    </font><font color="#0000aa">set</font><font color="#000000"> r r1<br />    </font><font color="#0000aa">set</font><font color="#000000"> v v1<br />    </font><font color="#0000aa">set</font><font color="#000000"> gv gv1<br />  ]<br />  </font><font color="#0000aa">set</font><font color="#000000"> circles </font><font color="#660096">turtles</font><font color="#000000"><br />  </font><font color="#0000aa">print</font><font color="#000000"> r <br />  </font><font color="#0000aa">print</font><font color="#000000"> v<br />  </font><font color="#0000aa">print</font><font color="#000000"> gv<br /></font><font color="#007f69">end</font><font color="#000000"><br /><br /><br /></font><font color="#007f69">to-report</font><font color="#000000"> heading-to-vector [angle]<br />  </font><font color="#0000aa">let</font><font color="#000000"> x-component </font><font color="#660096">sin</font><font color="#000000"> angle </font><font color="#660096">*</font><font color="#000000"> </font><font color="#963700">1.0</font><font color="#000000">  </font><font color="#5a5a5a">; Multiply by desired magnitude</font><font color="#000000"><br />  </font><font color="#0000aa">let</font><font color="#000000"> y-component </font><font color="#660096">cos</font><font color="#000000"> angle </font><font color="#660096">*</font><font color="#000000"> </font><font color="#963700">-1.0</font><font color="#000000"> </font><font color="#5a5a5a">; Multiply by desired magnitude</font><font color="#000000"><br />  </font><font color="#0000aa">report</font><font color="#000000"> (</font><font color="#660096">list</font><font color="#000000"> x-component y-component)<br /></font><font color="#007f69">end</font><font color="#000000"><br /><br /></font><font color="#007f69">to-report</font><font color="#000000"> subtract [pa pb]<br />  </font><font color="#0000aa">let</font><font color="#000000"> p []<br />  </font><font color="#0000aa">let</font><font color="#000000"> xpb ( </font><font color="#660096">item</font><font color="#000000"> </font><font color="#963700">0</font><font color="#000000"> pb)<br />  </font><font color="#0000aa">let</font><font color="#000000"> xpa ( </font><font color="#660096">item</font><font color="#000000"> </font><font color="#963700">0</font><font color="#000000"> pa)<br />  </font><font color="#0000aa">let</font><font color="#000000"> xp xpb </font><font color="#660096">-</font><font color="#000000"> xpa <br />  </font><font color="#0000aa">let</font><font color="#000000"> ypb ( </font><font color="#660096">item</font><font color="#000000"> </font><font color="#963700">1</font><font color="#000000"> pb)<br />  </font><font color="#0000aa">let</font><font color="#000000"> ypa ( </font><font color="#660096">item</font><font color="#000000"> </font><font color="#963700">1</font><font color="#000000"> pa)<br />  </font><font color="#0000aa">let</font><font color="#000000"> yp ypb </font><font color="#660096">-</font><font color="#000000"> ypa <br />  </font><font color="#0000aa">set</font><font color="#000000"> p (</font><font color="#660096">list</font><font color="#000000"> xp yp)<br />  </font><font color="#0000aa">report</font><font color="#000000"> p<br /></font><font color="#007f69">end</font><font color="#000000"><br /><br /></font><font color="#007f69">to-report</font><font color="#000000"> multiplyvector [pa pb]<br />  </font><font color="#5a5a5a">;let p []</font><font color="#000000"><br />  </font><font color="#0000aa">let</font><font color="#000000"> x1 </font><font color="#660096">item</font><font color="#000000"> </font><font color="#963700">0</font><font color="#000000"> pa<br />  </font><font color="#0000aa">let</font><font color="#000000"> x2 </font><font color="#660096">item</font><font color="#000000"> </font><font color="#963700">0</font><font color="#000000"> pb<br />  </font><font color="#0000aa">let</font><font color="#000000"> y1 </font><font color="#660096">item</font><font color="#000000"> </font><font color="#963700">1</font><font color="#000000"> pa<br />  </font><font color="#0000aa">let</font><font color="#000000"> y2 </font><font color="#660096">item</font><font color="#000000"> </font><font color="#963700">1</font><font color="#000000"> pb<br />  </font><font color="#0000aa">let</font><font color="#000000"> p (x1 </font><font color="#660096">*</font><font color="#000000"> x2) </font><font color="#660096">+</font><font color="#000000"> (y1 </font><font color="#660096">*</font><font color="#000000"> y2)<br />  </font><font color="#0000aa">report</font><font color="#000000"> p<br /></font><font color="#007f69">end</font><font color="#000000"><br /><br /></font><font color="#007f69">to-report</font><font color="#000000"> multiplyscalar [f a]<br />  </font><font color="#0000aa">let</font><font color="#000000"> h []<br />  </font><font color="#0000aa">let</font><font color="#000000"> f1 (</font><font color="#660096">item</font><font color="#000000"> </font><font color="#963700">0</font><font color="#000000"> f) </font><font color="#660096">*</font><font color="#000000"> a<br />  </font><font color="#0000aa">let</font><font color="#000000"> f2 (</font><font color="#660096">item</font><font color="#000000"> </font><font color="#963700">1</font><font color="#000000"> f) </font><font color="#660096">*</font><font color="#000000"> a<br />  </font><font color="#0000aa">set</font><font color="#000000"> h (</font><font color="#660096">list</font><font color="#000000"> f1 f2)<br />  </font><font color="#0000aa">report</font><font color="#000000"> h<br /></font><font color="#007f69">end</font><font color="#000000"><br />  <br /></font><font color="#007f69">to-report</font><font color="#000000"> dE [ pa pb va vb ra rb ]<br />  </font><font color="#0000aa">let</font><font color="#000000"> B </font><font color="#963700">1.5</font><font color="#000000">  </font><font color="#5a5a5a">; parameter</font><font color="#000000"><br />  </font><font color="#0000aa">let</font><font color="#000000"> m </font><font color="#963700">2.0</font><font color="#000000">  </font><font color="#5a5a5a">; parameter</font><font color="#000000"><br />  </font><font color="#0000aa">let</font><font color="#000000"> t0 </font><font color="#963700">3</font><font color="#000000">   </font><font color="#5a5a5a">; parameter</font><font color="#000000"><br />  </font><font color="#0000aa">let</font><font color="#000000"> infty </font><font color="#963700">999</font><font color="#000000"><br />  </font><font color="#0000aa">let</font><font color="#000000"> maxt </font><font color="#963700">999</font><font color="#000000"><br />  </font><font color="#0000aa">let</font><font color="#000000"> p []<br />  </font><font color="#0000aa">set</font><font color="#000000"> p subtract pa pb<br />  </font><font color="#0000aa">let</font><font color="#000000"> u []<br />  </font><font color="#0000aa">set</font><font color="#000000"> u subtract vb va<br />  </font><font color="#0000aa">let</font><font color="#000000"> radius ra </font><font color="#660096">+</font><font color="#000000"> rb<br />  </font><font color="#0000aa">let</font><font color="#000000"> px </font><font color="#660096">item</font><font color="#000000"> </font><font color="#963700">0</font><font color="#000000"> p<br />  </font><font color="#0000aa">let</font><font color="#000000"> py </font><font color="#660096">item</font><font color="#000000"> </font><font color="#963700">1</font><font color="#000000"> p<br />  </font><font color="#0000aa">let</font><font color="#000000"> dist </font><font color="#660096">sqrt</font><font color="#000000"> (px </font><font color="#660096">^</font><font color="#000000"> </font><font color="#963700">2</font><font color="#000000"> </font><font color="#660096">+</font><font color="#000000"> py </font><font color="#660096">^</font><font color="#000000"> </font><font color="#963700">2</font><font color="#000000">)<br />  </font><font color="#0000aa">if</font><font color="#000000"> (radius </font><font color="#660096">&gt;</font><font color="#000000"> dist) [</font><font color="#0000aa">set</font><font color="#000000"> radius </font><font color="#963700">0.99</font><font color="#000000"> </font><font color="#660096">*</font><font color="#000000"> dist]<br />  </font><font color="#0000aa">let</font><font color="#000000"> a multiplyvector u u <br />  </font><font color="#0000aa">let</font><font color="#000000"> d multiplyvector p u<br />  </font><font color="#0000aa">let</font><font color="#000000"> j multiplyvector p p<br />  </font><font color="#0000aa">let</font><font color="#000000"> c j </font><font color="#660096">-</font><font color="#000000"> radius </font><font color="#660096">*</font><font color="#000000"> radius<br />  </font><font color="#0000aa">let</font><font color="#000000"> discr d </font><font color="#660096">*</font><font color="#000000"> d </font><font color="#660096">-</font><font color="#000000"> a </font><font color="#660096">*</font><font color="#000000"> c<br />  </font><font color="#0000aa">if</font><font color="#000000"> (discr </font><font color="#660096">&lt;</font><font color="#000000"> </font><font color="#963700">0</font><font color="#000000">) </font><font color="#660096">or</font><font color="#000000"> (a </font><font color="#660096">&lt;</font><font color="#000000"> </font><font color="#963700">0.001</font><font color="#000000"> </font><font color="#660096">and</font><font color="#000000"> a </font><font color="#660096">&gt;</font><font color="#000000"> (</font><font color="#963700">0</font><font color="#000000"> </font><font color="#660096">-</font><font color="#000000"> </font><font color="#963700">0.001</font><font color="#000000">)) [ </font><font color="#0000aa">report</font><font color="#000000"> (</font><font color="#660096">list</font><font color="#000000"> </font><font color="#963700">0</font><font color="#000000"> </font><font color="#963700">0</font><font color="#000000">) ]<br />  </font><font color="#0000aa">set</font><font color="#000000"> discr </font><font color="#660096">sqrt</font><font color="#000000"> (discr)<br />  </font><font color="#0000aa">let</font><font color="#000000"> t1 (d </font><font color="#660096">-</font><font color="#000000"> discr) </font><font color="#660096">/</font><font color="#000000"> a<br />  </font><font color="#0000aa">let</font><font color="#000000"> t t1<br />  </font><font color="#0000aa">if</font><font color="#000000"> (t </font><font color="#660096">&lt;</font><font color="#000000"> </font><font color="#963700">0</font><font color="#000000">) [</font><font color="#0000aa">report</font><font color="#000000"> (</font><font color="#660096">list</font><font color="#000000"> </font><font color="#963700">0</font><font color="#000000"> </font><font color="#963700">0</font><font color="#000000">)]<br />  </font><font color="#0000aa">if</font><font color="#000000"> (t </font><font color="#660096">&gt;</font><font color="#000000"> maxt) [</font><font color="#0000aa">report</font><font color="#000000"> (</font><font color="#660096">list</font><font color="#000000"> </font><font color="#963700">0</font><font color="#000000"> </font><font color="#963700">0</font><font color="#000000">)]<br />  </font><font color="#0000aa">let</font><font color="#000000"> g B </font><font color="#660096">*</font><font color="#000000"> </font><font color="#660096">exp</font><font color="#000000">(</font><font color="#660096">-</font><font color="#000000"> t </font><font color="#660096">/</font><font color="#000000"> t0) </font><font color="#660096">*</font><font color="#000000"> (u </font><font color="#660096">-</font><font color="#000000"> (u </font><font color="#660096">*</font><font color="#000000"> d </font><font color="#660096">-</font><font color="#000000"> p </font><font color="#660096">*</font><font color="#000000"> a) </font><font color="#660096">/</font><font color="#000000"> (discr)) </font><font color="#660096">/</font><font color="#000000"> (a </font><font color="#660096">*</font><font color="#000000"> t </font><font color="#660096">^</font><font color="#000000"> m) </font><font color="#660096">*</font><font color="#000000"> (m </font><font color="#660096">/</font><font color="#000000"> t </font><font color="#660096">+</font><font color="#000000"> </font><font color="#963700">1</font><font color="#000000"> </font><font color="#660096">/</font><font color="#000000"> t0)<br />  </font><font color="#0000aa">report</font><font color="#000000"> g<br /></font><font color="#007f69">end</font><font color="#000000"><br /><br /></font><font color="#007f69">to-report</font><font color="#000000"> addscalar [f a]<br />  </font><font color="#0000aa">let</font><font color="#000000"> h []<br />  </font><font color="#0000aa">let</font><font color="#000000"> f1 </font><font color="#660096">item</font><font color="#000000"> </font><font color="#963700">0</font><font color="#000000"> f <br />  </font><font color="#0000aa">let</font><font color="#000000"> h1 f1 </font><font color="#660096">+</font><font color="#000000"> a<br />  </font><font color="#0000aa">let</font><font color="#000000"> f2 </font><font color="#660096">item</font><font color="#000000"> </font><font color="#963700">1</font><font color="#000000"> f<br />  </font><font color="#0000aa">let</font><font color="#000000"> h2 f2 </font><font color="#660096">+</font><font color="#000000"> a<br />  </font><font color="#0000aa">set</font><font color="#000000"> h (</font><font color="#660096">list</font><font color="#000000"> h1 h2)<br />  </font><font color="#0000aa">report</font><font color="#000000"> h<br /></font><font color="#007f69">end</font><font color="#000000"><br /><br /></font><font color="#007f69">to-report</font><font color="#000000"> addvector [f a]<br />  </font><font color="#0000aa">let</font><font color="#000000"> h []<br />  </font><font color="#0000aa">let</font><font color="#000000"> f1 </font><font color="#660096">item</font><font color="#000000"> </font><font color="#963700">0</font><font color="#000000"> f <br />  </font><font color="#0000aa">let</font><font color="#000000"> e1 </font><font color="#660096">item</font><font color="#000000"> </font><font color="#963700">0</font><font color="#000000"> a<br />  </font><font color="#0000aa">let</font><font color="#000000"> f2 </font><font color="#660096">item</font><font color="#000000"> </font><font color="#963700">1</font><font color="#000000"> f <br />  </font><font color="#0000aa">let</font><font color="#000000"> e2 </font><font color="#660096">item</font><font color="#000000"> </font><font color="#963700">1</font><font color="#000000"> a<br />  </font><font color="#0000aa">let</font><font color="#000000"> h1 f1 </font><font color="#660096">+</font><font color="#000000"> e1<br />  </font><font color="#0000aa">let</font><font color="#000000"> h2 f2 </font><font color="#660096">+</font><font color="#000000"> e2<br />  </font><font color="#0000aa">set</font><font color="#000000"> h (</font><font color="#660096">list</font><font color="#000000"> h1 h2)<br /></font><font color="#007f69">end</font><font color="#000000"><br /><br /></font><font color="#007f69">to</font><font color="#000000"> updt [ dt ]<br />  </font><font color="#0000aa">set</font><font color="#000000"> nbr []<br />  </font><font color="#0000aa">set</font><font color="#000000"> nd []<br />  </font><font color="#0000aa">ask</font><font color="#000000"> </font><font color="#660096">turtles</font><font color="#000000"> [<br />    </font><font color="#0000aa">let</font><font color="#000000"> F (</font><font color="#660096">list</font><font color="#000000"> </font><font color="#963700">0</font><font color="#000000"> </font><font color="#963700">0</font><font color="#000000"> )<br />    </font><font color="#0000aa">set</font><font color="#000000"> nbr </font><font color="#660096">lput</font><font color="#000000"> [] nbr<br />    </font><font color="#0000aa">set</font><font color="#000000"> nd </font><font color="#660096">lput</font><font color="#000000"> [] nd<br />    </font><font color="#0000aa">let</font><font color="#000000"> this </font><font color="#660096">self</font><font color="#000000"><br />    </font><font color="#0000aa">let</font><font color="#000000"> mx [</font><font color="#660096">pxcor</font><font color="#000000">] </font><font color="#660096">of</font><font color="#000000"> this<br />    </font><font color="#0000aa">let</font><font color="#000000"> my [</font><font color="#660096">pycor</font><font color="#000000">] </font><font color="#660096">of</font><font color="#000000"> this<br />    </font><font color="#0000aa">let</font><font color="#000000"> pa (</font><font color="#660096">list</font><font color="#000000"> mx my) <br />    </font><font color="#0000aa">let</font><font color="#000000"> indx </font><font color="#660096">position</font><font color="#000000"> pa r<br />    </font><font color="#0000aa">print</font><font color="#000000"> pa<br />    </font><font color="#0000aa">print</font><font color="#000000"> indx<br />    </font><font color="#5a5a5a">;let turtles-positions map [t -&gt; list [pxcor] of t [pycor] of t] r</font><font color="#000000"><br />    </font><font color="#5a5a5a">;let turtle-position [pxcor] of self [pycor] of self</font><font color="#000000"><br />    </font><font color="#5a5a5a">;let indx position turtle-position turtles-positions</font><font color="#000000"><br />    </font><font color="#0000aa">let</font><font color="#000000"> va </font><font color="#660096">item</font><font color="#000000"> indx v<br />    </font><font color="#0000aa">ask</font><font color="#000000"> </font><font color="#660096">other</font><font color="#000000"> </font><font color="#660096">turtles</font><font color="#000000"> [<br />      </font><font color="#0000aa">let</font><font color="#000000"> other-turtle </font><font color="#660096">self</font><font color="#000000"><br />      </font><font color="#0000aa">let</font><font color="#000000"> d </font><font color="#660096">distance</font><font color="#000000"> </font><font color="#660096">myself</font><font color="#000000"><br />      </font><font color="#0000aa">if</font><font color="#000000"> d </font><font color="#660096">&lt;=</font><font color="#000000"> sight [<br />        </font><font color="#0000aa">set</font><font color="#000000"> nbr </font><font color="#660096">lput</font><font color="#000000"> </font><font color="#660096">who</font><font color="#000000"> nbr<br />        </font><font color="#0000aa">set</font><font color="#000000"> nd </font><font color="#660096">lput</font><font color="#000000"> d nd<br />        </font><font color="#0000aa">let</font><font color="#000000"> nx [</font><font color="#660096">pxcor</font><font color="#000000">] </font><font color="#660096">of</font><font color="#000000"> other-turtle<br />        </font><font color="#0000aa">let</font><font color="#000000"> ny [</font><font color="#660096">pycor</font><font color="#000000">] </font><font color="#660096">of</font><font color="#000000"> other-turtle<br />        </font><font color="#0000aa">let</font><font color="#000000"> pb (</font><font color="#660096">list</font><font color="#000000"> nx ny)<br />        </font><font color="#0000aa">let</font><font color="#000000"> idx </font><font color="#660096">position</font><font color="#000000"> pb r<br />        </font><font color="#0000aa">let</font><font color="#000000"> vb </font><font color="#660096">item</font><font color="#000000"> idx v<br />        </font><font color="#0000aa">let</font><font color="#000000"> ra rad<br />        </font><font color="#0000aa">let</font><font color="#000000"> rb rad<br />        </font><font color="#0000aa">let</font><font color="#000000"> frc dE pa pb va vb ra rb<br />        </font><font color="#0000aa">set</font><font color="#000000"> F addscalar F frc<br />        </font><font color="#0000aa">set</font><font color="#000000"> nbr </font><font color="#660096">lput</font><font color="#000000"> </font><font color="#660096">who</font><font color="#000000"> nbr<br />        </font><font color="#0000aa">set</font><font color="#000000"> nd </font><font color="#660096">lput</font><font color="#000000"> d nd<br />      ]<br />    ]<br />   </font><font color="#0000aa">let</font><font color="#000000"> thisv va<br />   </font><font color="#0000aa">let</font><font color="#000000"> thisg </font><font color="#660096">item</font><font color="#000000"> indx gv<br />    </font><font color="#0000aa">let</font><font color="#000000"> k subtract thisv thisg<br />   </font><font color="#0000aa">set</font><font color="#000000"> F addvector F k<br />    </font><font color="#0000aa">let</font><font color="#000000"> z multiplyscalar F dt<br />   </font><font color="#0000aa">let</font><font color="#000000"> nextv addvector thisv z<br />   </font><font color="#0000aa">let</font><font color="#000000"> q multiplyscalar nextv dt<br />   </font><font color="#0000aa">let</font><font color="#000000"> nextp addvector pa q<br />    </font><font color="#5a5a5a">;if abs nextv &gt; maxF [set nextv maxF * (nextv / abs nextv)]</font><font color="#000000"><br />    </font><font color="#5a5a5a">;set thisv nextv</font><font color="#000000"><br />    </font><font color="#0000aa">let</font><font color="#000000"> v2 </font><font color="#660096">replace-item</font><font color="#000000"> indx v nextv<br />    </font><font color="#0000aa">set</font><font color="#000000"> v v2<br />    </font><font color="#0000aa">set</font><font color="#000000"> this </font><font color="#660096">pcolor</font><font color="#000000"> </font><font color="#660096">+</font><font color="#000000"> (</font><font color="#963700">50</font><font color="#000000"> </font><font color="#660096">*</font><font color="#000000"> (nextv </font><font color="#660096">-</font><font color="#000000"> thisv) </font><font color="#660096">/</font><font color="#000000"> maxF)<br />    </font><font color="#0000aa">setxy</font><font color="#000000"> </font><font color="#660096">item</font><font color="#000000"> </font><font color="#963700">0</font><font color="#000000"> nextp </font><font color="#660096">item</font><font color="#000000"> </font><font color="#963700">1</font><font color="#000000"> nextp<br />    </font><font color="#0000aa">let</font><font color="#000000"> x3 </font><font color="#660096">item</font><font color="#000000"> </font><font color="#963700">0</font><font color="#000000"> nextp<br />    </font><font color="#0000aa">let</font><font color="#000000"> y3 </font><font color="#660096">item</font><font color="#000000"> </font><font color="#963700">1</font><font color="#000000"> nextp<br />    </font><font color="#0000aa">let</font><font color="#000000"> xy1 (</font><font color="#660096">list</font><font color="#000000"> x3 y3)<br />    </font><font color="#0000aa">let</font><font color="#000000"> r2 </font><font color="#660096">replace-item</font><font color="#000000"> indx r xy1<br />    </font><font color="#0000aa">set</font><font color="#000000"> r r2<br />  ]<br /></font><font color="#007f69">end</font><font color="#000000"><br /><br /></font><font color="#007f69">to</font><font color="#000000"> go<br />   updt </font><font color="#963700">0.1</font><font color="#000000"><br />   </font><font color="#0000aa">tick</font><font color="#000000"><br /></font><font color="#007f69">end</font>
-</pre>
+globals [
+  num           ; number of agents
+  ;;s             ; environment size in meters
+  rad           ; collision radius
+  sight         ; neighbor search range
+  maxF          ; maximum force/acceleration
+  circles       ; list of agent turtles
+  v             ; list of agent velocities
+  gv            ; list of agent goal velocities
+  nbr           ; list of agent neighbor lists
+  nd            ; list of agent neighbor distance lists
+ ;  listvelocity;
+  yo;
+  zo;
+  listgv;
+  he;
+  te;
+  r
+  rx
+  ry
+]
+
+to setup
+  clear-all
+  reset-ticks
+  set num 18
+  set rad 0.2
+  set sight 7
+  set maxF 999
+  set r []
+  set v []
+  set gv []
+  let i max-pxcor - 1
+  let j max-pycor - 1
+  create-turtles num [
+    set color white
+    set size 2
+    set shape "circle"
+    setxy random-float i random-float j
+    set heading random 360
+   ; set listvelocity[];
+    set rx [pxcor] of self
+    set ry [pycor] of self
+    set yo 1.5 * (item (0) (heading-to-vector heading))
+    set zo 1.5 * (item (1) (heading-to-vector heading))
+    let vo (list yo zo)
+    set he 2 * (item (0) (heading-to-vector heading))
+    set te 2 * (item (1) (heading-to-vector heading))
+    let gvo (list he te)
+    let ro (list rx ry)
+    print ro
+    print vo
+    print gvo
+    ifelse (who = 0) [ set color red ] [ set color white ]
+    let r1 lput ro r
+    let v1 lput vo v
+    let gv1 lput gvo gv
+    set r r1
+    set v v1
+    set gv gv1
+  ]
+  set circles turtles
+  print r 
+  print v
+  print gv
+end
+
+
+to-report heading-to-vector [angle]
+  let x-component sin angle * 1.0  ; Multiply by desired magnitude
+  let y-component cos angle * -1.0 ; Multiply by desired magnitude
+  report (list x-component y-component)
+end
+
+to-report subtract [pa pb]
+  let p []
+  let xpb ( item 0 pb)
+  let xpa ( item 0 pa)
+  let xp xpb - xpa 
+  let ypb ( item 1 pb)
+  let ypa ( item 1 pa)
+  let yp ypb - ypa 
+  set p (list xp yp)
+  report p
+end
+
+to-report multiplyvector [pa pb]
+  ;let p []
+  let x1 item 0 pa
+  let x2 item 0 pb
+  let y1 item 1 pa
+  let y2 item 1 pb
+  let p (x1 * x2) + (y1 * y2)
+  report p
+end
+
+to-report multiplyscalar [f a]
+  let h []
+  let f1 (item 0 f) * a
+  let f2 (item 1 f) * a
+  set h (list f1 f2)
+  report h
+end
+  
+to-report dE [ pa pb va vb ra rb ]
+  let B 1.5  ; parameter
+  let m 2.0  ; parameter
+  let t0 3   ; parameter
+  let infty 999
+  let maxt 999
+  let p []
+  set p subtract pa pb
+  let u []
+  set u subtract vb va
+  let radius ra + rb
+  let px item 0 p
+  let py item 1 p
+  let dist sqrt (px ^ 2 + py ^ 2)
+  if (radius > dist) [set radius 0.99 * dist]
+  let a multiplyvector u u 
+  let d multiplyvector p u
+  let j multiplyvector p p
+  let c j - radius * radius
+  let discr d * d - a * c
+  if (discr < 0) or (a < 0.001 and a > (0 - 0.001)) [ report (list 0 0) ]
+  set discr sqrt (discr)
+  let t1 (d - discr) / a
+  let t t1
+  if (t < 0) [report (list 0 0)]
+  if (t > maxt) [report (list 0 0)]
+  let g B * exp(- t / t0) * (u - (u * d - p * a) / (discr)) / (a * t ^ m) * (m / t + 1 / t0)
+  report g
+end
+
+to-report addscalar [f a]
+  let h []
+  let f1 item 0 f 
+  let h1 f1 + a
+  let f2 item 1 f
+  let h2 f2 + a
+  set h (list h1 h2)
+  report h
+end
+
+to-report addvector [f a]
+  let h []
+  let f1 item 0 f 
+  let e1 item 0 a
+  let f2 item 1 f 
+  let e2 item 1 a
+  let h1 f1 + e1
+  let h2 f2 + e2
+  set h (list h1 h2)
+end
+
+to updt [ dt ]
+  set nbr []
+  set nd []
+  ask turtles [
+    let F (list 0 0 )
+    set nbr lput [] nbr
+    set nd lput [] nd
+    let this self
+    let mx [pxcor] of this
+    let my [pycor] of this
+    let pa (list mx my) 
+    let indx position pa r
+    print pa
+    print indx
+    ;let turtles-positions map [t -> list [pxcor] of t [pycor] of t] r
+    ;let turtle-position [pxcor] of self [pycor] of self
+    ;let indx position turtle-position turtles-positions
+    let va item indx v
+    ask other turtles [
+      let other-turtle self
+      let d distance myself
+      if d <= sight [
+        set nbr lput who nbr
+        set nd lput d nd
+        let nx [pxcor] of other-turtle
+        let ny [pycor] of other-turtle
+        let pb (list nx ny)
+        let idx position pb r
+        let vb item idx v
+        let ra rad
+        let rb rad
+        let frc dE pa pb va vb ra rb
+        set F addscalar F frc
+        set nbr lput who nbr
+        set nd lput d nd
+      ]
+    ]
+   let thisv va
+   let thisg item indx gv
+    let k subtract thisv thisg
+   set F addvector F k
+    let z multiplyscalar F dt
+   let nextv addvector thisv z
+   let q multiplyscalar nextv dt
+   let nextp addvector pa q
+    ;if abs nextv > maxF [set nextv maxF * (nextv / abs nextv)]
+    ;set thisv nextv
+    let v2 replace-item indx v nextv
+    set v v2
+    set this pcolor + (50 * (nextv - thisv) / maxF)
+    setxy item 0 nextp item 1 nextp
+    let x3 item 0 nextp
+    let y3 item 1 nextp
+    let xy1 (list x3 y3)
+    let r2 replace-item indx r xy1
+    set r r2
+  ]
+end
+
+to go
+   updt 0.1
+   tick
+end
